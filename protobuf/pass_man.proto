@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./internal/infrastructure/grpc;pb";
+
+service UserService {
+    rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+}
+
+message SignUpRequest {
+    User user = 1;
+}
+
+message SignUpResponse {
+    Token token = 1;
+    Error error = 2;
+}
+
+message LoginRequest {
+    User user = 1;
+}
+
+message LoginResponse {
+    Token token = 1;
+    Error error = 2;
+}
+
+message Token {
+    string token = 1;
+}
+
+message User {
+    string login = 1;
+    bytes password = 2;
+}
+
+message Error {
+    string message = 1;
+}
+
+service VaultService {
+    rpc AddPassword(AddPasswordRequest) returns (AddPasswordResponse) {}
+    rpc GetPassword(GetPasswordRequest) returns (GetPasswordResponse) {}
+    rpc ListPassword(ListPasswordRequest) returns (ListPasswordResponse) {}
+}
+
+message AddPasswordRequest {
+    Password password = 1;
+}
+
+message AddPasswordResponse {
+    Error error = 1;
+}
+
+message GetPasswordRequest {
+    Password password = 1;
+}
+
+message GetPasswordResponse {
+    Password password = 1;
+    Error error = 2;
+}
+
+message ListPasswordRequest {
+}
+
+message ListPasswordResponse {
+    repeated Password password = 1;
+    Error error = 2;
+}
+
+message Password {
+    string meta = 1;
+    string user = 2;
+    bytes password = 3;
+}
