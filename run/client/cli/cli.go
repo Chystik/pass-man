@@ -7,14 +7,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	"github.com/Chystik/pass-man/internal/vault"
 )
 
 type cli struct {
-	api usecases.VaultAPICliet
+	api vault.VaultAPICliet
 }
 
-func NewCli(api usecases.VaultAPICliet) *cli {
+func NewCli(api vault.VaultAPICliet) *cli {
 	return &cli{
 		api: api,
 	}
@@ -48,6 +48,8 @@ func (c *cli) Main(ctx context.Context) {
 			cleanScr()
 			c.card(ctx, r)
 		case '3':
+			cleanScr()
+			c.note(ctx, r)
 		case '4':
 			cleanScr()
 			c.file(ctx, r)

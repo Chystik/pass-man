@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	vault "github.com/Chystik/pass-man/internal/vault/entities"
+	"github.com/Chystik/pass-man/internal/vault/password/entities"
 )
 
 func (c *cli) password(ctx context.Context, r *bufio.Reader) {
@@ -40,7 +40,7 @@ func (c *cli) password(ctx context.Context, r *bufio.Reader) {
 			r.ReadString('\n')
 		case '2':
 			reset(r)
-			var p vault.Password
+			var p entities.Password
 
 			fmt.Fprintf(os.Stdout, "Description: ")
 			p.Meta, _ = r.ReadString('\n')
@@ -52,6 +52,7 @@ func (c *cli) password(ctx context.Context, r *bufio.Reader) {
 			err := c.api.AddPassword(ctx, p)
 			if err != nil {
 				fmt.Fprintln(os.Stdout, err)
+				break
 			}
 
 			fmt.Fprintln(os.Stdout, "The password was added")
@@ -96,7 +97,7 @@ func (c *cli) password(ctx context.Context, r *bufio.Reader) {
 	}
 }
 
-func printPasswordList(p []vault.Password) {
+func printPasswordList(p []entities.Password) {
 	for i := range p {
 		fmt.Fprintf(os.Stdout,
 			"(%d): Description: %sUsername: %sPassword: %s\n",

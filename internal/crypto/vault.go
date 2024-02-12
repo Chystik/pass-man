@@ -12,7 +12,7 @@ import (
 	"hash"
 	"io"
 
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	"github.com/Chystik/pass-man/internal/vault"
 )
 
 const (
@@ -23,10 +23,10 @@ const (
 )
 
 type vaultCryptor struct {
-	key usecases.VaultKeyStore
+	key vault.VaultKeyStore
 }
 
-func NewVaultCryptor(keyStore usecases.VaultKeyStore) *vaultCryptor {
+func NewVaultCryptor(keyStore vault.VaultKeyStore) *vaultCryptor {
 	return &vaultCryptor{
 		key: keyStore,
 	}

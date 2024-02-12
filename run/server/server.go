@@ -14,9 +14,18 @@ import (
 	adapters "github.com/Chystik/pass-man/internal/user/adapters/server"
 	"github.com/Chystik/pass-man/internal/user/infrastructure/repository"
 	"github.com/Chystik/pass-man/internal/user/usecases"
-	vaultadapters "github.com/Chystik/pass-man/internal/vault/adapters/server"
-	vaultrepository "github.com/Chystik/pass-man/internal/vault/infrastructure/repository"
-	vaultusecases "github.com/Chystik/pass-man/internal/vault/usecases"
+	cardAdapters "github.com/Chystik/pass-man/internal/vault/card/adapters/server"
+	cardRepo "github.com/Chystik/pass-man/internal/vault/card/infrastructure/repository"
+	cardUsecases "github.com/Chystik/pass-man/internal/vault/card/usecases"
+	fileAdapters "github.com/Chystik/pass-man/internal/vault/file/adapters/server"
+	fileRepo "github.com/Chystik/pass-man/internal/vault/file/infrastructure/repository"
+	fileUsecases "github.com/Chystik/pass-man/internal/vault/file/usecases"
+	noteAdapters "github.com/Chystik/pass-man/internal/vault/note/adapters/server"
+	noteRepo "github.com/Chystik/pass-man/internal/vault/note/infrastructure/repository"
+	noteUsecases "github.com/Chystik/pass-man/internal/vault/note/usecases"
+	passAdapters "github.com/Chystik/pass-man/internal/vault/password/adapters/server"
+	passRepo "github.com/Chystik/pass-man/internal/vault/password/infrastructure/repository"
+	passUsecases "github.com/Chystik/pass-man/internal/vault/password/usecases"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -70,15 +79,17 @@ func Server(ctx context.Context, cfg *config.ServerConfig) {
 
 	// Init repositories
 	useRepository := repository.NewUserRepository(pg.DB, log)
-	passwordRepository := vaultrepository.NewPasswordRepository(pg.DB, log, cryptor)
-	cardRepository := vaultrepository.NewCardRepository(pg.DB, log, cryptor)
-	fileRepository := vaultrepository.NewFileRepository(pg.DB, pg.Conn, log, cryptor)
+	passwordRepository := passRepo.NewPasswordRepository(pg.DB, log, cryptor)
+	cardRepository := cardRepo.NewCardRepository(pg.DB, log, cryptor)
+	fileRepository := fileRepo.NewFileRepository(pg.DB, pg.Conn, log, cryptor)
+	noteRepository := noteRepo.NewNoteRepository(pg.DB, log, cryptor)
 
 	// Create usecases
 	userUsecases := usecases.NewUserUsecases(useRepository, keyStore)
-	passwordUsecases := vaultusecases.NewPasswordUsecases(passwordRepository)
-	cardUsecases := vaultusecases.NewCardUsecases(cardRepository)
-	fileUsecases := vaultusecases.NewFileUsecases(fileRepository)
+	passwordUsecases := passUsecases.NewPasswordUsecases(passwordRepository)
+	cardUsecases := cardUsecases.NewCardUsecases(cardRepository)
+	fileUsecases := fileUsecases.NewFileUsecases(fileRepository)
+	noteUsecases := noteUsecases.NewNoteRepository(noteRepository)
 
 	// Init gRPC server
 	lis, err := net.Listen("tcp", cfg.Address)
@@ -101,9 +112,10 @@ func Server(ctx context.Context, cfg *config.ServerConfig) {
 
 	// Register gRPC methods
 	pb.RegisterUserServiceServer(gs, adapters.NewUserHandlers(userUsecases, cfg.AuthSecretKey))
-	pb.RegisterPasswordServiceServer(gs, vaultadapters.NewPasswordHandlers(passwordUsecases))
-	pb.RegisterCardServiceServer(gs, vaultadapters.NewCardHandlers(cardUsecases))
-	pb.RegisterFileServiceServer(gs, vaultadapters.NewFileHandlers(fileUsecases))
+	pb.RegisterPasswordServiceServer(gs, passAdapters.NewPasswordHandlers(passwordUsecases))
+	pb.RegisterCardServiceServer(gs, cardAdapters.NewCardHandlers(cardUsecases))
+	pb.RegisterFileServiceServer(gs, fileAdapters.NewFileHandlers(fileUsecases))
+	pb.RegisterNoteServiceServer(gs, noteAdapters.NewPasswordHandlers(noteUsecases))
 
 	// Run gRPC server
 	go func() {

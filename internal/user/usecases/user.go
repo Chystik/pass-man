@@ -4,15 +4,15 @@ import (
 	"context"
 
 	"github.com/Chystik/pass-man/internal/user/entities"
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	"github.com/Chystik/pass-man/internal/vault"
 )
 
 type userUsecases struct {
 	repo  UserRepository
-	vault usecases.VaultKeyStore
+	vault vault.VaultKeyStore
 }
 
-func NewUserUsecases(ur UserRepository, ks usecases.VaultKeyStore) *userUsecases {
+func NewUserUsecases(ur UserRepository, ks vault.VaultKeyStore) *userUsecases {
 	return &userUsecases{
 		repo:  ur,
 		vault: ks,

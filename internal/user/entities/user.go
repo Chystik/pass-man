@@ -45,7 +45,7 @@ func (u User) Authenticate(password []byte) error {
 	return nil
 }
 
-func (u User) GetLoginFromContext(ctx context.Context) (string, error) {
+func GetLoginFromContext(ctx context.Context) (string, error) {
 	claims, ok := ctx.Value(ClaimsKeyName).(*AuthClaims)
 	if !ok {
 		return "", &appErr.AppError{Op: "user.GetLoginFromContext", Code: appErr.ErrAuthClaims}

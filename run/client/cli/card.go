@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	vault "github.com/Chystik/pass-man/internal/vault/entities"
+	"github.com/Chystik/pass-man/internal/vault/card/entities"
 )
 
 func (c *cli) card(ctx context.Context, r *bufio.Reader) {
@@ -43,7 +43,7 @@ func (c *cli) card(ctx context.Context, r *bufio.Reader) {
 			r.ReadString('\n')
 		case '2':
 			reset(r)
-			var card vault.Card
+			var card entities.Card
 
 			fmt.Fprintf(os.Stdout, "Description: ")
 			card.Meta, _ = r.ReadString('\n')
@@ -139,7 +139,7 @@ func (c *cli) card(ctx context.Context, r *bufio.Reader) {
 	}
 }
 
-func printCardList(c []vault.Card) {
+func printCardList(c []entities.Card) {
 	for i := range c {
 		fmt.Fprintf(os.Stdout,
 			"(%d): Description: %s\nNumber: %s\nValidThru: %s\nHolder: %s\nCVV: %d\n",
