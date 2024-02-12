@@ -19,7 +19,7 @@ func NewUserUsecases(ur UserRepository, ks usecases.VaultKeyStore) *userUsecases
 	}
 }
 
-func (u *userUsecases) Create(ctx context.Context, login string, password []byte) error {
+func (u *userUsecases) CreateUser(ctx context.Context, login string, password []byte) error {
 	var user entities.User
 
 	user.Login = login
@@ -39,7 +39,7 @@ func (u *userUsecases) Create(ctx context.Context, login string, password []byte
 	return u.unlockUserVault(user, password)
 }
 
-func (u *userUsecases) Authenticate(ctx context.Context, login string, password []byte) error {
+func (u *userUsecases) AuthenticateUser(ctx context.Context, login string, password []byte) error {
 	actual, err := u.repo.Get(ctx, login)
 	if err != nil {
 		return err

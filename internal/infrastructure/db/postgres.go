@@ -9,7 +9,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgerrcode"
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
@@ -26,13 +26,14 @@ var (
 
 type pg struct {
 	*sqlx.DB
+	*pgx.Conn
 	connConfig *pgx.ConnConfig
 	logger     *zap.Logger
 }
 
 // NewPG opens a postgres db
 func NewPG(uri string, logger *zap.Logger) (*pg, error) {
-	cc, err := pgx.ParseURI(uri)
+	cc, err := pgx.ParseConfig(uri)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +49,7 @@ func NewPG(uri string, logger *zap.Logger) (*pg, error) {
 
 	return &pg{
 		DB:         db,
-		connConfig: &cc,
+		connConfig: cc,
 		logger:     logger,
 	}, nil
 }
@@ -104,6 +105,12 @@ func (p *pg) Connect(ctx context.Context) error {
 			SSLmode,
 		),
 	)
+	if err != nil {
+		p.logger.Error(err.Error())
+		return err
+	}
+
+	p.Conn, err = pgx.ConnectConfig(ctx, p.connConfig)
 	if err != nil {
 		p.logger.Error(err.Error())
 		return err

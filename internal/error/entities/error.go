@@ -12,6 +12,7 @@ type errorCode string
 // App error codes.
 const (
 	ErrNotFound       errorCode = "object not found"
+	ErrEmptyList      errorCode = "list is empty"
 	ErrExists         errorCode = "object already exists in the repository"
 	ErrUserCreds      errorCode = "wrong user password"
 	ErrAuthClaims     errorCode = "wrong auth claims"

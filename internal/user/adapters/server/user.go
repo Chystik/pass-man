@@ -27,7 +27,7 @@ func NewUserHandlers(uu usecases.UserUsecases, jwtKey []byte) *userHandlers {
 func (uh *userHandlers) SignUp(ctx context.Context, u *pb.SignUpRequest) (*pb.SignUpResponse, error) {
 	var response pb.SignUpResponse
 
-	if err := uh.usecases.Create(ctx, u.User.Login, u.User.Password); err != nil {
+	if err := uh.usecases.CreateUser(ctx, u.User.Login, u.User.Password); err != nil {
 		return nil, status.Errorf(codes.Internal, "create user error: %s", err.Error())
 	}
 
@@ -44,7 +44,7 @@ func (uh *userHandlers) SignUp(ctx context.Context, u *pb.SignUpRequest) (*pb.Si
 func (uh *userHandlers) Login(ctx context.Context, u *pb.LoginRequest) (*pb.LoginResponse, error) {
 	var response pb.LoginResponse
 
-	err := uh.usecases.Authenticate(ctx, u.User.Login, u.User.Password)
+	err := uh.usecases.AuthenticateUser(ctx, u.User.Login, u.User.Password)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "authenticate user error: %s", err.Error())
 	}

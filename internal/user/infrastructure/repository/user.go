@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	appErr "github.com/Chystik/pass-man/internal/error/entities"
@@ -57,6 +58,10 @@ func (ur *userRepository) Get(ctx context.Context, login string) (entities.User,
 
 	err := ur.db.GetContext(ctx, &u, query, login)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return u, &appErr.AppError{Op: "userRepository.Get", Code: appErr.ErrNotFound, Message: fmt.Sprintf("user %s not found", login)}
+		}
+		ur.log.Error(err.Error())
 		return u, err
 	}
 

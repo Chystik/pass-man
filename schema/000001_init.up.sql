@@ -17,7 +17,7 @@ create table if not exists passman.password (
 create table if not exists passman.card (
     id uuid primary key default gen_random_uuid(),
     user_id varchar(50) references passman.user(login) on delete cascade not null,
-    meta bytea not null,
+    meta varchar(50) not null,
     number bytea not null,
     valid_thru bytea not null,
     holder bytea not null,
@@ -27,14 +27,13 @@ create table if not exists passman.card (
 create table if not exists passman.note (
     id uuid primary key default gen_random_uuid(),
     user_id varchar(50) references passman.user(login) on delete cascade not null,
-    meta bytea not null,
+    meta varchar(50) not null,
     note bytea not null
 );
 
 create table if not exists passman.file (
-    id uuid primary key default gen_random_uuid(),
+    id oid primary key,
     user_id varchar(50) references passman.user(login) on delete cascade not null,
-    meta bytea not null,
-    full_name bytea not null,
-    data oid not null
+    meta varchar(50) not null,
+    full_name bytea not null
 );

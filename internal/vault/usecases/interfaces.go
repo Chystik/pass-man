@@ -7,28 +7,9 @@ import (
 	"github.com/Chystik/pass-man/internal/vault/entities"
 )
 
-type PasswordRepository interface {
-	AddPassword(ctx context.Context, password entities.Password) error
-	GetPassword(ctx context.Context) (entities.Password, error)
-	DeletePassword(ctx context.Context, password entities.Password) error
-	ListPassword(ctx context.Context) ([]entities.Password, error)
-}
-
-type CardRepository interface {
-	AddCard(ctx context.Context, card entities.Card) error
-	GetCard(ctx context.Context) (entities.Card, error)
-	DeleteCard(ctx context.Context, car entities.Password) error
-	ListCard(ctx context.Context) ([]entities.Card, error)
-}
-
-type VaultRepository interface {
-	PasswordRepository
-	CardRepository
-}
-
 type VaultCryptor interface {
-	Encrypt(dst io.Writer) (int, error)
-	Decrypt(src io.Reader) (int, error)
+	Encrypt(in io.Reader, out io.Writer, userID string) (int, error)
+	Decrypt(in io.Reader, out io.Writer, userID string) (int, error)
 }
 
 type VaultKeyStore interface {
@@ -37,38 +18,44 @@ type VaultKeyStore interface {
 	GetKey(login string) ([]byte, error)
 }
 
-type PasswordUsecase interface {
-	AddPassword(ctx context.Context, password entities.Password) error
-	GetPassword(ctx context.Context) (entities.Password, error)
-	DeletePassword(ctx context.Context, password entities.Password) error
-	ListPassword(ctx context.Context) ([]entities.Password, error)
+type PasswordRepository interface {
+	Create(ctx context.Context, userID string, password entities.Password) error
+	GetOne(ctx context.Context, userID string, meta string) (entities.Password, error)
+	Delete(ctx context.Context, userID string, meta string) error
+	GetList(ctx context.Context, userID string) ([]entities.Password, error)
 }
 
-type VaultUsecase interface {
-	PasswordUsecase
+type CardRepository interface {
+	Create(ctx context.Context, userID string, card entities.Card) error
+	GetOne(ctx context.Context, userID string, meta string) (entities.Card, error)
+	Delete(ctx context.Context, userID string, meta string) error
+	GetList(ctx context.Context, userID string) ([]entities.Card, error)
 }
 
-type PasswordAPIClient interface {
-	AddPassword(ctx context.Context, password entities.Password) error
-	GetPassword(ctx context.Context) (entities.Password, error)
-	DeletePassword(ctx context.Context, password entities.Password) error
-	ListPassword(ctx context.Context) ([]entities.Password, error)
+type FileRepository interface {
+	Create(ctx context.Context, userID string, file *entities.File) (int, error)
+	GetOne(ctx context.Context, userID string, file *entities.File) (int, error)
+	Delete(ctx context.Context, userID string, file *entities.File) error
+	GetList(ctx context.Context, userID string) ([]*entities.File, error)
 }
 
-type CardAPIClient interface {
-	AddCard(ctx context.Context, password entities.Password) error
-	GetCard(ctx context.Context) (entities.Password, error)
-	ListCard(ctx context.Context) ([]entities.Password, error)
+type PasswordUsecases interface {
+	AddPassword(ctx context.Context, userID string, password entities.Password) error
+	GetPassword(ctx context.Context, userID string, meta string) (entities.Password, error)
+	DeletePassword(ctx context.Context, userID string, meta string) error
+	ListPassword(ctx context.Context, userID string) ([]entities.Password, error)
 }
 
-type NoteAPIClient interface {
-	AddNote(ctx context.Context, password entities.Password) error
-	GetNote(ctx context.Context) (entities.Password, error)
-	ListNote(ctx context.Context) ([]entities.Password, error)
+type CardUsecases interface {
+	AddCard(ctx context.Context, userID string, card entities.Card) error
+	GetCard(ctx context.Context, userID string, meta string) (entities.Card, error)
+	DeleteCard(ctx context.Context, userID string, meta string) error
+	ListCard(ctx context.Context, userID string) ([]entities.Card, error)
 }
 
-type FilePIClient interface {
-	AddFile(ctx context.Context, password entities.Password) error
-	GetFile(ctx context.Context) (entities.Password, error)
-	ListFile(ctx context.Context) ([]entities.Password, error)
+type FileUsecases interface {
+	Upload(ctx context.Context, userID string, file *entities.File) (int, error)
+	Download(ctx context.Context, userID string, file *entities.File) (int, error)
+	Delete(ctx context.Context, userID string, file *entities.File) error
+	ListFiles(ctx context.Context, userID string) ([]*entities.File, error)
 }

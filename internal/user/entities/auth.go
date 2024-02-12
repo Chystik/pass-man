@@ -3,7 +3,7 @@ package entities
 import (
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type (
@@ -14,7 +14,7 @@ type (
 const (
 	//CookieName                = "token"
 	ClaimsKeyName   ClaimsKey = "props"
-	TokenExpiration           = 5 * time.Minute
+	TokenExpiration           = 24 * time.Hour
 )
 
 type AuthClaims struct {

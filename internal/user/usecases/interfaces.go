@@ -14,8 +14,8 @@ type UserRepository interface {
 }
 
 type UserUsecases interface {
-	Create(ctx context.Context, login string, password []byte) error
-	Authenticate(ctx context.Context, login string, password []byte) error
+	CreateUser(ctx context.Context, login string, password []byte) error
+	AuthenticateUser(ctx context.Context, login string, password []byte) error
 }
 
 type UserAPIClient interface {

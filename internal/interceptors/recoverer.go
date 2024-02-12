@@ -21,3 +21,15 @@ func UnaryServerRecoverer(l *zap.Logger) grpc.UnaryServerInterceptor {
 	}
 	return recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler))
 }
+
+func StreamServerRecoverer(l *zap.Logger) grpc.StreamServerInterceptor {
+	var grpcPanicRecoveryHandler = func(p any) error {
+		l.Error(
+			"recovered from panic",
+			zap.Any("panic", p),
+			zap.String("stack", string(debug.Stack())),
+		)
+		return status.Errorf(codes.Internal, "%s", p)
+	}
+	return recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler))
+}

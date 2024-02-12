@@ -40,10 +40,11 @@ message Error {
     string message = 1;
 }
 
-service VaultService {
-    rpc AddPassword(AddPasswordRequest) returns (AddPasswordResponse) {}
-    rpc GetPassword(GetPasswordRequest) returns (GetPasswordResponse) {}
-    rpc ListPassword(ListPasswordRequest) returns (ListPasswordResponse) {}
+service PasswordService {
+    rpc AddPassword(AddPasswordRequest) returns (AddPasswordResponse) {};
+    rpc GetPassword(GetPasswordRequest) returns (GetPasswordResponse) {};
+    rpc ListPassword(ListPasswordRequest) returns (ListPasswordResponse) {};
+    rpc DeletePassword(DeletePasswordRequest) returns (DeletePasswordResponse) {};
 }
 
 message AddPasswordRequest {
@@ -55,7 +56,7 @@ message AddPasswordResponse {
 }
 
 message GetPasswordRequest {
-    Password password = 1;
+    string meta = 1;
 }
 
 message GetPasswordResponse {
@@ -67,12 +68,121 @@ message ListPasswordRequest {
 }
 
 message ListPasswordResponse {
-    repeated Password password = 1;
+    repeated Password passwordList = 1;
     Error error = 2;
+}
+
+message DeletePasswordRequest {
+    string meta = 1;
+}
+
+message DeletePasswordResponse {
+    Error error = 1;
 }
 
 message Password {
     string meta = 1;
-    string user = 2;
-    bytes password = 3;
+    string username = 2;
+    string password = 3;
+}
+
+service CardService {
+    rpc AddCard(AddCardRequest) returns (AddCardResponse) {};
+    rpc GetCard(GetCardRequest) returns (GetCardResponse) {};
+    rpc ListCard(ListCardRequest) returns (ListCardResponse) {};
+    rpc DeleteCard(DeleteCardRequest) returns (DeleteCardResponse) {};
+}
+
+message AddCardRequest {
+    Card card = 1;
+}
+
+message AddCardResponse {
+    Error error = 1;
+}
+
+message GetCardRequest {
+    string meta = 1;
+}
+
+message GetCardResponse {
+    Card card = 1;
+    Error error = 2;
+}
+
+message ListCardRequest {
+}
+
+message ListCardResponse {
+    repeated Card cardList = 1;
+    Error error = 2;
+}
+
+message DeleteCardRequest {
+    string meta = 1;
+}
+
+message DeleteCardResponse {
+    Error error = 1;
+}
+
+message Card {
+    string meta = 1;
+    string number = 2;
+    string valid_thru = 3;
+    string holder = 4;
+    uint32 cvv = 5;
+}
+
+service FileService {
+    rpc Upload(stream UploadFileRequest) returns (UploadFileResponse) {};
+    rpc Download(DownloadFileRequest) returns (stream DownloadFileResponse) {};
+    rpc ListFiles(ListFileRequest) returns (ListFileResponse) {};
+    rpc Delete(DeleteFileRequest) returns (DeleteFileResponse) {};
+}
+
+message UploadFileRequest {
+    oneof data {
+    File file = 1;
+    bytes chunk_data = 2;
+  };
+}
+
+message UploadFileResponse {
+    Error error = 1;
+    uint32 size = 2;
+}
+
+message DownloadFileRequest {
+    File file = 1;
+}
+
+message DownloadFileResponse {
+    oneof data {
+    File file = 1;
+    bytes chunk_data = 2;
+  };
+    Error error = 3;
+}
+
+message ListFileRequest {
+}
+
+message ListFileResponse {
+    repeated File fileList = 1;
+    Error error = 2;
+}
+
+message DeleteFileRequest {
+    File file = 1;
+}
+
+message DeleteFileResponse {
+    Error error = 1;
+}
+
+message File {
+    uint32 id = 1;
+    string meta = 2;
+    string full_name = 3;
 }

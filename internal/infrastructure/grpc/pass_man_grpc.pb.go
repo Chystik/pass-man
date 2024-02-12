@@ -146,165 +146,666 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	VaultService_AddPassword_FullMethodName  = "/pb.VaultService/AddPassword"
-	VaultService_GetPassword_FullMethodName  = "/pb.VaultService/GetPassword"
-	VaultService_ListPassword_FullMethodName = "/pb.VaultService/ListPassword"
+	PasswordService_AddPassword_FullMethodName    = "/pb.PasswordService/AddPassword"
+	PasswordService_GetPassword_FullMethodName    = "/pb.PasswordService/GetPassword"
+	PasswordService_ListPassword_FullMethodName   = "/pb.PasswordService/ListPassword"
+	PasswordService_DeletePassword_FullMethodName = "/pb.PasswordService/DeletePassword"
 )
 
-// VaultServiceClient is the client API for VaultService service.
+// PasswordServiceClient is the client API for PasswordService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type VaultServiceClient interface {
+type PasswordServiceClient interface {
 	AddPassword(ctx context.Context, in *AddPasswordRequest, opts ...grpc.CallOption) (*AddPasswordResponse, error)
 	GetPassword(ctx context.Context, in *GetPasswordRequest, opts ...grpc.CallOption) (*GetPasswordResponse, error)
 	ListPassword(ctx context.Context, in *ListPasswordRequest, opts ...grpc.CallOption) (*ListPasswordResponse, error)
+	DeletePassword(ctx context.Context, in *DeletePasswordRequest, opts ...grpc.CallOption) (*DeletePasswordResponse, error)
 }
 
-type vaultServiceClient struct {
+type passwordServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewVaultServiceClient(cc grpc.ClientConnInterface) VaultServiceClient {
-	return &vaultServiceClient{cc}
+func NewPasswordServiceClient(cc grpc.ClientConnInterface) PasswordServiceClient {
+	return &passwordServiceClient{cc}
 }
 
-func (c *vaultServiceClient) AddPassword(ctx context.Context, in *AddPasswordRequest, opts ...grpc.CallOption) (*AddPasswordResponse, error) {
+func (c *passwordServiceClient) AddPassword(ctx context.Context, in *AddPasswordRequest, opts ...grpc.CallOption) (*AddPasswordResponse, error) {
 	out := new(AddPasswordResponse)
-	err := c.cc.Invoke(ctx, VaultService_AddPassword_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, PasswordService_AddPassword_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *vaultServiceClient) GetPassword(ctx context.Context, in *GetPasswordRequest, opts ...grpc.CallOption) (*GetPasswordResponse, error) {
+func (c *passwordServiceClient) GetPassword(ctx context.Context, in *GetPasswordRequest, opts ...grpc.CallOption) (*GetPasswordResponse, error) {
 	out := new(GetPasswordResponse)
-	err := c.cc.Invoke(ctx, VaultService_GetPassword_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, PasswordService_GetPassword_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *vaultServiceClient) ListPassword(ctx context.Context, in *ListPasswordRequest, opts ...grpc.CallOption) (*ListPasswordResponse, error) {
+func (c *passwordServiceClient) ListPassword(ctx context.Context, in *ListPasswordRequest, opts ...grpc.CallOption) (*ListPasswordResponse, error) {
 	out := new(ListPasswordResponse)
-	err := c.cc.Invoke(ctx, VaultService_ListPassword_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, PasswordService_ListPassword_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// VaultServiceServer is the server API for VaultService service.
-// All implementations must embed UnimplementedVaultServiceServer
+func (c *passwordServiceClient) DeletePassword(ctx context.Context, in *DeletePasswordRequest, opts ...grpc.CallOption) (*DeletePasswordResponse, error) {
+	out := new(DeletePasswordResponse)
+	err := c.cc.Invoke(ctx, PasswordService_DeletePassword_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PasswordServiceServer is the server API for PasswordService service.
+// All implementations must embed UnimplementedPasswordServiceServer
 // for forward compatibility
-type VaultServiceServer interface {
+type PasswordServiceServer interface {
 	AddPassword(context.Context, *AddPasswordRequest) (*AddPasswordResponse, error)
 	GetPassword(context.Context, *GetPasswordRequest) (*GetPasswordResponse, error)
 	ListPassword(context.Context, *ListPasswordRequest) (*ListPasswordResponse, error)
-	mustEmbedUnimplementedVaultServiceServer()
+	DeletePassword(context.Context, *DeletePasswordRequest) (*DeletePasswordResponse, error)
+	mustEmbedUnimplementedPasswordServiceServer()
 }
 
-// UnimplementedVaultServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedVaultServiceServer struct {
+// UnimplementedPasswordServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedPasswordServiceServer struct {
 }
 
-func (UnimplementedVaultServiceServer) AddPassword(context.Context, *AddPasswordRequest) (*AddPasswordResponse, error) {
+func (UnimplementedPasswordServiceServer) AddPassword(context.Context, *AddPasswordRequest) (*AddPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPassword not implemented")
 }
-func (UnimplementedVaultServiceServer) GetPassword(context.Context, *GetPasswordRequest) (*GetPasswordResponse, error) {
+func (UnimplementedPasswordServiceServer) GetPassword(context.Context, *GetPasswordRequest) (*GetPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPassword not implemented")
 }
-func (UnimplementedVaultServiceServer) ListPassword(context.Context, *ListPasswordRequest) (*ListPasswordResponse, error) {
+func (UnimplementedPasswordServiceServer) ListPassword(context.Context, *ListPasswordRequest) (*ListPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPassword not implemented")
 }
-func (UnimplementedVaultServiceServer) mustEmbedUnimplementedVaultServiceServer() {}
+func (UnimplementedPasswordServiceServer) DeletePassword(context.Context, *DeletePasswordRequest) (*DeletePasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePassword not implemented")
+}
+func (UnimplementedPasswordServiceServer) mustEmbedUnimplementedPasswordServiceServer() {}
 
-// UnsafeVaultServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to VaultServiceServer will
+// UnsafePasswordServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PasswordServiceServer will
 // result in compilation errors.
-type UnsafeVaultServiceServer interface {
-	mustEmbedUnimplementedVaultServiceServer()
+type UnsafePasswordServiceServer interface {
+	mustEmbedUnimplementedPasswordServiceServer()
 }
 
-func RegisterVaultServiceServer(s grpc.ServiceRegistrar, srv VaultServiceServer) {
-	s.RegisterService(&VaultService_ServiceDesc, srv)
+func RegisterPasswordServiceServer(s grpc.ServiceRegistrar, srv PasswordServiceServer) {
+	s.RegisterService(&PasswordService_ServiceDesc, srv)
 }
 
-func _VaultService_AddPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PasswordService_AddPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VaultServiceServer).AddPassword(ctx, in)
+		return srv.(PasswordServiceServer).AddPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VaultService_AddPassword_FullMethodName,
+		FullMethod: PasswordService_AddPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VaultServiceServer).AddPassword(ctx, req.(*AddPasswordRequest))
+		return srv.(PasswordServiceServer).AddPassword(ctx, req.(*AddPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VaultService_GetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PasswordService_GetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VaultServiceServer).GetPassword(ctx, in)
+		return srv.(PasswordServiceServer).GetPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VaultService_GetPassword_FullMethodName,
+		FullMethod: PasswordService_GetPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VaultServiceServer).GetPassword(ctx, req.(*GetPasswordRequest))
+		return srv.(PasswordServiceServer).GetPassword(ctx, req.(*GetPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VaultService_ListPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PasswordService_ListPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(VaultServiceServer).ListPassword(ctx, in)
+		return srv.(PasswordServiceServer).ListPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: VaultService_ListPassword_FullMethodName,
+		FullMethod: PasswordService_ListPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VaultServiceServer).ListPassword(ctx, req.(*ListPasswordRequest))
+		return srv.(PasswordServiceServer).ListPassword(ctx, req.(*ListPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// VaultService_ServiceDesc is the grpc.ServiceDesc for VaultService service.
+func _PasswordService_DeletePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PasswordServiceServer).DeletePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PasswordService_DeletePassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PasswordServiceServer).DeletePassword(ctx, req.(*DeletePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PasswordService_ServiceDesc is the grpc.ServiceDesc for PasswordService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var VaultService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.VaultService",
-	HandlerType: (*VaultServiceServer)(nil),
+var PasswordService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.PasswordService",
+	HandlerType: (*PasswordServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "AddPassword",
-			Handler:    _VaultService_AddPassword_Handler,
+			Handler:    _PasswordService_AddPassword_Handler,
 		},
 		{
 			MethodName: "GetPassword",
-			Handler:    _VaultService_GetPassword_Handler,
+			Handler:    _PasswordService_GetPassword_Handler,
 		},
 		{
 			MethodName: "ListPassword",
-			Handler:    _VaultService_ListPassword_Handler,
+			Handler:    _PasswordService_ListPassword_Handler,
+		},
+		{
+			MethodName: "DeletePassword",
+			Handler:    _PasswordService_DeletePassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
+	Metadata: "protobuf/pass_man.proto",
+}
+
+const (
+	CardService_AddCard_FullMethodName    = "/pb.CardService/AddCard"
+	CardService_GetCard_FullMethodName    = "/pb.CardService/GetCard"
+	CardService_ListCard_FullMethodName   = "/pb.CardService/ListCard"
+	CardService_DeleteCard_FullMethodName = "/pb.CardService/DeleteCard"
+)
+
+// CardServiceClient is the client API for CardService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CardServiceClient interface {
+	AddCard(ctx context.Context, in *AddCardRequest, opts ...grpc.CallOption) (*AddCardResponse, error)
+	GetCard(ctx context.Context, in *GetCardRequest, opts ...grpc.CallOption) (*GetCardResponse, error)
+	ListCard(ctx context.Context, in *ListCardRequest, opts ...grpc.CallOption) (*ListCardResponse, error)
+	DeleteCard(ctx context.Context, in *DeleteCardRequest, opts ...grpc.CallOption) (*DeleteCardResponse, error)
+}
+
+type cardServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCardServiceClient(cc grpc.ClientConnInterface) CardServiceClient {
+	return &cardServiceClient{cc}
+}
+
+func (c *cardServiceClient) AddCard(ctx context.Context, in *AddCardRequest, opts ...grpc.CallOption) (*AddCardResponse, error) {
+	out := new(AddCardResponse)
+	err := c.cc.Invoke(ctx, CardService_AddCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cardServiceClient) GetCard(ctx context.Context, in *GetCardRequest, opts ...grpc.CallOption) (*GetCardResponse, error) {
+	out := new(GetCardResponse)
+	err := c.cc.Invoke(ctx, CardService_GetCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cardServiceClient) ListCard(ctx context.Context, in *ListCardRequest, opts ...grpc.CallOption) (*ListCardResponse, error) {
+	out := new(ListCardResponse)
+	err := c.cc.Invoke(ctx, CardService_ListCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cardServiceClient) DeleteCard(ctx context.Context, in *DeleteCardRequest, opts ...grpc.CallOption) (*DeleteCardResponse, error) {
+	out := new(DeleteCardResponse)
+	err := c.cc.Invoke(ctx, CardService_DeleteCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CardServiceServer is the server API for CardService service.
+// All implementations must embed UnimplementedCardServiceServer
+// for forward compatibility
+type CardServiceServer interface {
+	AddCard(context.Context, *AddCardRequest) (*AddCardResponse, error)
+	GetCard(context.Context, *GetCardRequest) (*GetCardResponse, error)
+	ListCard(context.Context, *ListCardRequest) (*ListCardResponse, error)
+	DeleteCard(context.Context, *DeleteCardRequest) (*DeleteCardResponse, error)
+	mustEmbedUnimplementedCardServiceServer()
+}
+
+// UnimplementedCardServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCardServiceServer struct {
+}
+
+func (UnimplementedCardServiceServer) AddCard(context.Context, *AddCardRequest) (*AddCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCard not implemented")
+}
+func (UnimplementedCardServiceServer) GetCard(context.Context, *GetCardRequest) (*GetCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCard not implemented")
+}
+func (UnimplementedCardServiceServer) ListCard(context.Context, *ListCardRequest) (*ListCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCard not implemented")
+}
+func (UnimplementedCardServiceServer) DeleteCard(context.Context, *DeleteCardRequest) (*DeleteCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCard not implemented")
+}
+func (UnimplementedCardServiceServer) mustEmbedUnimplementedCardServiceServer() {}
+
+// UnsafeCardServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CardServiceServer will
+// result in compilation errors.
+type UnsafeCardServiceServer interface {
+	mustEmbedUnimplementedCardServiceServer()
+}
+
+func RegisterCardServiceServer(s grpc.ServiceRegistrar, srv CardServiceServer) {
+	s.RegisterService(&CardService_ServiceDesc, srv)
+}
+
+func _CardService_AddCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CardServiceServer).AddCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CardService_AddCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CardServiceServer).AddCard(ctx, req.(*AddCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CardService_GetCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CardServiceServer).GetCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CardService_GetCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CardServiceServer).GetCard(ctx, req.(*GetCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CardService_ListCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CardServiceServer).ListCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CardService_ListCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CardServiceServer).ListCard(ctx, req.(*ListCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CardService_DeleteCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CardServiceServer).DeleteCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CardService_DeleteCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CardServiceServer).DeleteCard(ctx, req.(*DeleteCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CardService_ServiceDesc is the grpc.ServiceDesc for CardService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CardService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.CardService",
+	HandlerType: (*CardServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AddCard",
+			Handler:    _CardService_AddCard_Handler,
+		},
+		{
+			MethodName: "GetCard",
+			Handler:    _CardService_GetCard_Handler,
+		},
+		{
+			MethodName: "ListCard",
+			Handler:    _CardService_ListCard_Handler,
+		},
+		{
+			MethodName: "DeleteCard",
+			Handler:    _CardService_DeleteCard_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "protobuf/pass_man.proto",
+}
+
+const (
+	FileService_Upload_FullMethodName    = "/pb.FileService/Upload"
+	FileService_Download_FullMethodName  = "/pb.FileService/Download"
+	FileService_ListFiles_FullMethodName = "/pb.FileService/ListFiles"
+	FileService_Delete_FullMethodName    = "/pb.FileService/Delete"
+)
+
+// FileServiceClient is the client API for FileService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FileServiceClient interface {
+	Upload(ctx context.Context, opts ...grpc.CallOption) (FileService_UploadClient, error)
+	Download(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (FileService_DownloadClient, error)
+	ListFiles(ctx context.Context, in *ListFileRequest, opts ...grpc.CallOption) (*ListFileResponse, error)
+	Delete(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
+}
+
+type fileServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFileServiceClient(cc grpc.ClientConnInterface) FileServiceClient {
+	return &fileServiceClient{cc}
+}
+
+func (c *fileServiceClient) Upload(ctx context.Context, opts ...grpc.CallOption) (FileService_UploadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FileService_ServiceDesc.Streams[0], FileService_Upload_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &fileServiceUploadClient{stream}
+	return x, nil
+}
+
+type FileService_UploadClient interface {
+	Send(*UploadFileRequest) error
+	CloseAndRecv() (*UploadFileResponse, error)
+	grpc.ClientStream
+}
+
+type fileServiceUploadClient struct {
+	grpc.ClientStream
+}
+
+func (x *fileServiceUploadClient) Send(m *UploadFileRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *fileServiceUploadClient) CloseAndRecv() (*UploadFileResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(UploadFileResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *fileServiceClient) Download(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (FileService_DownloadClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FileService_ServiceDesc.Streams[1], FileService_Download_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &fileServiceDownloadClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type FileService_DownloadClient interface {
+	Recv() (*DownloadFileResponse, error)
+	grpc.ClientStream
+}
+
+type fileServiceDownloadClient struct {
+	grpc.ClientStream
+}
+
+func (x *fileServiceDownloadClient) Recv() (*DownloadFileResponse, error) {
+	m := new(DownloadFileResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *fileServiceClient) ListFiles(ctx context.Context, in *ListFileRequest, opts ...grpc.CallOption) (*ListFileResponse, error) {
+	out := new(ListFileResponse)
+	err := c.cc.Invoke(ctx, FileService_ListFiles_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileServiceClient) Delete(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
+	out := new(DeleteFileResponse)
+	err := c.cc.Invoke(ctx, FileService_Delete_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FileServiceServer is the server API for FileService service.
+// All implementations must embed UnimplementedFileServiceServer
+// for forward compatibility
+type FileServiceServer interface {
+	Upload(FileService_UploadServer) error
+	Download(*DownloadFileRequest, FileService_DownloadServer) error
+	ListFiles(context.Context, *ListFileRequest) (*ListFileResponse, error)
+	Delete(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
+	mustEmbedUnimplementedFileServiceServer()
+}
+
+// UnimplementedFileServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedFileServiceServer struct {
+}
+
+func (UnimplementedFileServiceServer) Upload(FileService_UploadServer) error {
+	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
+}
+func (UnimplementedFileServiceServer) Download(*DownloadFileRequest, FileService_DownloadServer) error {
+	return status.Errorf(codes.Unimplemented, "method Download not implemented")
+}
+func (UnimplementedFileServiceServer) ListFiles(context.Context, *ListFileRequest) (*ListFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFiles not implemented")
+}
+func (UnimplementedFileServiceServer) Delete(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedFileServiceServer) mustEmbedUnimplementedFileServiceServer() {}
+
+// UnsafeFileServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FileServiceServer will
+// result in compilation errors.
+type UnsafeFileServiceServer interface {
+	mustEmbedUnimplementedFileServiceServer()
+}
+
+func RegisterFileServiceServer(s grpc.ServiceRegistrar, srv FileServiceServer) {
+	s.RegisterService(&FileService_ServiceDesc, srv)
+}
+
+func _FileService_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(FileServiceServer).Upload(&fileServiceUploadServer{stream})
+}
+
+type FileService_UploadServer interface {
+	SendAndClose(*UploadFileResponse) error
+	Recv() (*UploadFileRequest, error)
+	grpc.ServerStream
+}
+
+type fileServiceUploadServer struct {
+	grpc.ServerStream
+}
+
+func (x *fileServiceUploadServer) SendAndClose(m *UploadFileResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *fileServiceUploadServer) Recv() (*UploadFileRequest, error) {
+	m := new(UploadFileRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _FileService_Download_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DownloadFileRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(FileServiceServer).Download(m, &fileServiceDownloadServer{stream})
+}
+
+type FileService_DownloadServer interface {
+	Send(*DownloadFileResponse) error
+	grpc.ServerStream
+}
+
+type fileServiceDownloadServer struct {
+	grpc.ServerStream
+}
+
+func (x *fileServiceDownloadServer) Send(m *DownloadFileResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _FileService_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).ListFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_ListFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).ListFiles(ctx, req.(*ListFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).Delete(ctx, req.(*DeleteFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FileService_ServiceDesc is the grpc.ServiceDesc for FileService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FileService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.FileService",
+	HandlerType: (*FileServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListFiles",
+			Handler:    _FileService_ListFiles_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _FileService_Delete_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Upload",
+			Handler:       _FileService_Upload_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Download",
+			Handler:       _FileService_Download_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "protobuf/pass_man.proto",
 }

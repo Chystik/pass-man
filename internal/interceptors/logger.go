@@ -13,23 +13,49 @@ func UnaryServerLogger(l *zap.Logger) grpc.UnaryServerInterceptor {
 		start := time.Now()
 
 		l.Info(
-			"GRPC request started",
+			"unary GRPC request started",
 			zap.String("method", info.FullMethod),
 		)
 
 		m, err := handler(ctx, req)
 		if err != nil {
 			l.Info(
-				"gRPC failed with error",
+				"unary gRPC failed with error",
 				zap.String("err", err.Error()),
 			)
 		}
 
 		l.Info(
-			"GRPC response completed",
+			"unary GRPC response completed",
 			zap.Duration("duration", time.Since(start)),
 		)
 
 		return m, err
+	}
+}
+
+func StreamServerLogger(l *zap.Logger) grpc.StreamServerInterceptor {
+	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		start := time.Now()
+
+		l.Info(
+			"stream GRPC request started",
+			zap.String("method", info.FullMethod),
+		)
+
+		err := handler(srv, ss)
+		if err != nil {
+			l.Info(
+				"stream gRPC failed with error",
+				zap.String("err", err.Error()),
+			)
+		}
+
+		l.Info(
+			"stream GRPC response completed",
+			zap.Duration("duration", time.Since(start)),
+		)
+
+		return err
 	}
 }
