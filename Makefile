@@ -11,7 +11,11 @@ test:
 race:
 	go test -v -race ./...
 
-.PHONY: init
+.PHONY: gen
+gen:
+	go generate ./...
+
+.PHONY: lint
 lint:
 	/home/user/go/bin/golangci-lint run
 

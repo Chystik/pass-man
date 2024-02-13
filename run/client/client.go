@@ -9,7 +9,6 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	useradapters "github.com/Chystik/pass-man/internal/user/adapters/client"
 	"github.com/Chystik/pass-man/internal/user/entities"
-	"github.com/Chystik/pass-man/internal/vault"
 	cardAdapters "github.com/Chystik/pass-man/internal/vault/card/adapters/client"
 	fileAdapters "github.com/Chystik/pass-man/internal/vault/file/adapters/client"
 	noteAdapters "github.com/Chystik/pass-man/internal/vault/note/adapters/client"
@@ -73,10 +72,10 @@ func Client(ctx context.Context, cfg *config.ClientConfig) {
 	noteAPI := noteAdapters.NewNoteAPIClient(conn, nc)
 
 	type vaultAPI struct {
-		vault.PasswordAPIClient
-		vault.CardAPIClient
-		vault.FileAPIClient
-		vault.NoteAPIClient
+		passAdapters.PasswordAPIClient
+		cardAdapters.CardAPIClient
+		fileAdapters.FileAPIClient
+		noteAdapters.NoteAPIClient
 	}
 
 	va := vaultAPI{

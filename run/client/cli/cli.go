@@ -7,14 +7,24 @@ import (
 	"os"
 	"time"
 
-	"github.com/Chystik/pass-man/internal/vault"
+	card "github.com/Chystik/pass-man/internal/vault/card/adapters/client"
+	file "github.com/Chystik/pass-man/internal/vault/file/adapters/client"
+	note "github.com/Chystik/pass-man/internal/vault/note/adapters/client"
+	pass "github.com/Chystik/pass-man/internal/vault/password/adapters/client"
 )
 
-type cli struct {
-	api vault.VaultAPICliet
+type VaultAPICliet interface {
+	pass.PasswordAPIClient
+	card.CardAPIClient
+	file.FileAPIClient
+	note.NoteAPIClient
 }
 
-func NewCli(api vault.VaultAPICliet) *cli {
+type cli struct {
+	api VaultAPICliet
+}
+
+func NewCli(api VaultAPICliet) *cli {
 	return &cli{
 		api: api,
 	}

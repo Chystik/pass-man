@@ -5,17 +5,23 @@ import (
 	"errors"
 
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
-	"github.com/Chystik/pass-man/internal/vault"
 	"github.com/Chystik/pass-man/internal/vault/card/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/card/entities"
 
 	"google.golang.org/grpc"
 )
 
+type CardAPIClient interface {
+	AddCard(ctx context.Context, card entities.Card) error
+	GetCard(ctx context.Context, meta string) (entities.Card, error)
+	ListCard(ctx context.Context) ([]entities.Card, error)
+	DeleteCard(ctx context.Context, meta string) error
+}
+
 type cardAPIClient struct {
 	conn *grpc.ClientConn
 	card pb.CardServiceClient
-	vault.CardAPIClient
+	CardAPIClient
 }
 
 func NewCardAPIClient(conn *grpc.ClientConn, card pb.CardServiceClient) *cardAPIClient {

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	appErr "github.com/Chystik/pass-man/internal/error/entities"
@@ -30,15 +31,12 @@ func (ur *userRepository) Create(ctx context.Context, user entities.User) error 
 			INSERT INTO	passman.user (login, password, vault_key)
 			VALUES ($1, $2, $3)`
 
-	ur.log.Debug("UserRepository.Create", zap.String("query", query))
-
 	_, err := ur.db.ExecContext(ctx, query, user.Login, user.HashedPassword, user.EncryptedVaultKey)
 	if err != nil {
 		pgErr, ok := err.(*pgconn.PgError)
 		if !ok {
 			return err
 		} else if pgErr.Code == "23505" { // login exists: duplicate key value violates unique constraint
-			fmt.Println("true1")
 			return &appErr.AppError{Op: "userRepository.Create", Code: appErr.ErrExists, Message: fmt.Sprintf("user %s already exists", user.Login)}
 		}
 		ur.log.Error(err.Error())
@@ -58,7 +56,7 @@ func (ur *userRepository) Get(ctx context.Context, login string) (entities.User,
 
 	err := ur.db.GetContext(ctx, &u, query, login)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return u, &appErr.AppError{Op: "userRepository.Get", Code: appErr.ErrNotFound, Message: fmt.Sprintf("user %s not found", login)}
 		}
 		ur.log.Error(err.Error())
@@ -66,12 +64,4 @@ func (ur *userRepository) Get(ctx context.Context, login string) (entities.User,
 	}
 
 	return u, nil
-}
-
-func (ur *userRepository) Update(ctx context.Context, user entities.User) error {
-	return nil
-}
-
-func (ur *userRepository) Delete(ctx context.Context, user entities.User) error {
-	return nil
 }

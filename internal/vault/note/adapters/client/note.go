@@ -5,17 +5,23 @@ import (
 	"errors"
 
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
-	"github.com/Chystik/pass-man/internal/vault"
 	"github.com/Chystik/pass-man/internal/vault/note/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/note/entities"
 
 	"google.golang.org/grpc"
 )
 
+type NoteAPIClient interface {
+	AddNote(ctx context.Context, note entities.Note) error
+	GetNote(ctx context.Context, meta string) (entities.Note, error)
+	ListNote(ctx context.Context) ([]entities.Note, error)
+	DeleteNote(ctx context.Context, meta string) error
+}
+
 type noteAPIClient struct {
 	conn *grpc.ClientConn
 	note pb.NoteServiceClient
-	vault.NoteAPIClient
+	NoteAPIClient
 }
 
 func NewNoteAPIClient(conn *grpc.ClientConn, note pb.NoteServiceClient) *noteAPIClient {

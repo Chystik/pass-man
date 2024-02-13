@@ -8,12 +8,18 @@ import (
 	"os"
 
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
-	"github.com/Chystik/pass-man/internal/vault"
 	"github.com/Chystik/pass-man/internal/vault/file/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/file/entities"
 
 	"google.golang.org/grpc"
 )
+
+type FileAPIClient interface {
+	UploadFile(ctx context.Context, file *entities.File, filePath string) error
+	DownloadFile(ctx context.Context, file *entities.File, filePath string) error
+	ListFiles(ctx context.Context) ([]*entities.File, error)
+	DeleteFile(ctx context.Context, file *entities.File) error
+}
 
 const (
 	bufferSize = 4 * 1024
@@ -22,7 +28,7 @@ const (
 type fileAPIClient struct {
 	conn *grpc.ClientConn
 	file pb.FileServiceClient
-	vault.FileAPIClient
+	FileAPIClient
 }
 
 func NewFileAPIClient(conn *grpc.ClientConn, file pb.FileServiceClient) *fileAPIClient {

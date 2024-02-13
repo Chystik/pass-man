@@ -6,15 +6,18 @@ import (
 
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/user/entities"
-	"github.com/Chystik/pass-man/internal/user/usecases"
 
 	"google.golang.org/grpc"
 )
 
+type UserAPIClient interface {
+	SignUp(ctx context.Context, login string, password []byte) (entities.JWTtoken, error)
+	Login(ctx context.Context, login string, password []byte) (entities.JWTtoken, error)
+}
+
 type userAPIClient struct {
 	conn   *grpc.ClientConn
 	client pb.UserServiceClient
-	usecases.UserAPIClient
 }
 
 func NewUserAPIClient(conn *grpc.ClientConn, client pb.UserServiceClient) *userAPIClient {
