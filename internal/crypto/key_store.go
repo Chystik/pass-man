@@ -25,9 +25,12 @@ func (v *keyStore) Lock(login string) error {
 		for i := range v {
 			v[i] = 0
 		}
+		return nil
 	}
 
-	return nil
+	return &entities.AppError{Op: "vaultcrypto.Lock",
+		Code:    entities.ErrNotFound,
+		Message: "user key not found in key storage"}
 }
 
 func (v *keyStore) Unlock(login string, key []byte) error {
