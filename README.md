@@ -3,9 +3,9 @@
 Requiements:
 
     docker
+    docker-compose
     make
-    go 1.18 and higher
-
+    go 1.18 or higher
 
 ## 1. Run server
 
@@ -47,7 +47,7 @@ stored on the client side and generates for each user signup/login.
 ## Run server
 
 Server uses postgresql for storing all types of private data.
-Use `make dev-up to` run database with docker.
+Use `make dev-up` to start the database with docker-compose.
 
 Server gets all configuration parameters from environment variables.
 It also can parse env vars from the file with -e flag: `go run ./cmd/server/ -e .env` 
@@ -55,3 +55,4 @@ It also can parse env vars from the file with -e flag: `go run ./cmd/server/ -e 
 ## Using the client
 
 Client needs only the server address "host:port", login and password.
+Run `go run ./cmd/client/ help` for help.
