@@ -54,5 +54,13 @@ It also can parse env vars from the file with -e flag: `go run ./cmd/server/ -e 
 
 ## Using the client
 
-Client needs only the server address "host:port", login and password.
+Client needs only the server address "host:port", user login and password.
 Run `go run ./cmd/client/ help` for help.
+
+## Encrypted data format
+
+                        bits
+    +-----------------------------------------+
+    | version | randIV | encryptedData | hmac |
+    +-----------------------------------------+
+        (8)     (128)      (varies)      (512)
