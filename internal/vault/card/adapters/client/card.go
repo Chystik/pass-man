@@ -34,7 +34,7 @@ func (ca *cardAPIClient) AddCard(ctx context.Context, card entities.Card) error 
 
 	res, err := ca.card.AddCard(ctx, req)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	if res.Error != nil {

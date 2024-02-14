@@ -138,7 +138,7 @@ func (fa *fileAPIClient) DownloadFile(ctx context.Context, file *entities.File, 
 
 		_, err = f.Write(chunk)
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 
