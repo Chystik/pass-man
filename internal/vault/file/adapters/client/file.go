@@ -10,8 +10,6 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/vault/file/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/file/entities"
-
-	"google.golang.org/grpc"
 )
 
 type FileAPIClient interface {
@@ -26,14 +24,12 @@ const (
 )
 
 type fileAPIClient struct {
-	conn *grpc.ClientConn
 	file pb.FileServiceClient
 	FileAPIClient
 }
 
-func NewFileAPIClient(conn *grpc.ClientConn, file pb.FileServiceClient) *fileAPIClient {
+func NewFileAPIClient(file pb.FileServiceClient) *fileAPIClient {
 	return &fileAPIClient{
-		conn: conn,
 		file: file,
 	}
 }

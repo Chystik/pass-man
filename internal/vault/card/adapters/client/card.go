@@ -7,8 +7,6 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/vault/card/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/card/entities"
-
-	"google.golang.org/grpc"
 )
 
 type CardAPIClient interface {
@@ -19,14 +17,12 @@ type CardAPIClient interface {
 }
 
 type cardAPIClient struct {
-	conn *grpc.ClientConn
 	card pb.CardServiceClient
 	CardAPIClient
 }
 
-func NewCardAPIClient(conn *grpc.ClientConn, card pb.CardServiceClient) *cardAPIClient {
+func NewCardAPIClient(card pb.CardServiceClient) *cardAPIClient {
 	return &cardAPIClient{
-		conn: conn,
 		card: card,
 	}
 }

@@ -6,8 +6,6 @@ import (
 
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/user/entities"
-
-	"google.golang.org/grpc"
 )
 
 type UserAPIClient interface {
@@ -16,13 +14,11 @@ type UserAPIClient interface {
 }
 
 type userAPIClient struct {
-	conn   *grpc.ClientConn
 	client pb.UserServiceClient
 }
 
-func NewUserAPIClient(conn *grpc.ClientConn, client pb.UserServiceClient) *userAPIClient {
+func NewUserAPIClient(client pb.UserServiceClient) *userAPIClient {
 	return &userAPIClient{
-		conn:   conn,
 		client: client,
 	}
 }

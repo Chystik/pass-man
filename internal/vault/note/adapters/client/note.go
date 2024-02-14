@@ -7,8 +7,6 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/vault/note/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/note/entities"
-
-	"google.golang.org/grpc"
 )
 
 type NoteAPIClient interface {
@@ -19,14 +17,12 @@ type NoteAPIClient interface {
 }
 
 type noteAPIClient struct {
-	conn *grpc.ClientConn
 	note pb.NoteServiceClient
 	NoteAPIClient
 }
 
-func NewNoteAPIClient(conn *grpc.ClientConn, note pb.NoteServiceClient) *noteAPIClient {
+func NewNoteAPIClient(note pb.NoteServiceClient) *noteAPIClient {
 	return &noteAPIClient{
-		conn: conn,
 		note: note,
 	}
 }

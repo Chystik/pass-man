@@ -39,7 +39,7 @@ func Client(ctx context.Context, cfg *config.ClientConfig) {
 	// User service
 	uc := pb.NewUserServiceClient(conn)
 
-	userAPI := useradapters.NewUserAPIClient(conn, uc)
+	userAPI := useradapters.NewUserAPIClient(uc)
 
 	signCtx, cancelSign := context.WithTimeout(ctx, 10*time.Second)
 	defer cancelSign()
@@ -66,10 +66,10 @@ func Client(ctx context.Context, cfg *config.ClientConfig) {
 	fc := pb.NewFileServiceClient(conn)
 	nc := pb.NewNoteServiceClient(conn)
 
-	passwordAPI := passAdapters.NewPasswordAPIClient(conn, pc)
-	cardAPI := cardAdapters.NewCardAPIClient(conn, cc)
-	fileAPI := fileAdapters.NewFileAPIClient(conn, fc)
-	noteAPI := noteAdapters.NewNoteAPIClient(conn, nc)
+	passwordAPI := passAdapters.NewPasswordAPIClient(pc)
+	cardAPI := cardAdapters.NewCardAPIClient(cc)
+	fileAPI := fileAdapters.NewFileAPIClient(fc)
+	noteAPI := noteAdapters.NewNoteAPIClient(nc)
 
 	type vaultAPI struct {
 		passAdapters.PasswordAPIClient

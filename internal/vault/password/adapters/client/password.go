@@ -7,8 +7,6 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	"github.com/Chystik/pass-man/internal/vault/password/adapters/converter"
 	"github.com/Chystik/pass-man/internal/vault/password/entities"
-
-	"google.golang.org/grpc"
 )
 
 type PasswordAPIClient interface {
@@ -19,14 +17,12 @@ type PasswordAPIClient interface {
 }
 
 type passwordAPIClient struct {
-	conn     *grpc.ClientConn
 	password pb.PasswordServiceClient
 	PasswordAPIClient
 }
 
-func NewPasswordAPIClient(conn *grpc.ClientConn, password pb.PasswordServiceClient) *passwordAPIClient {
+func NewPasswordAPIClient(password pb.PasswordServiceClient) *passwordAPIClient {
 	return &passwordAPIClient{
-		conn:     conn,
 		password: password,
 	}
 }
