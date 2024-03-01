@@ -12,7 +12,7 @@ import (
 	"hash"
 	"io"
 
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	"github.com/Chystik/pass-man/internal/vault"
 )
 
 const (
@@ -23,12 +23,12 @@ const (
 )
 
 type vaultCryptor struct {
-	key usecases.VaultKeyStore
+	keyStore vault.VaultKeyStore
 }
 
-func NewVaultCryptor(keyStore usecases.VaultKeyStore) *vaultCryptor {
+func NewVaultCryptor(keyStore vault.VaultKeyStore) *vaultCryptor {
 	return &vaultCryptor{
-		key: keyStore,
+		keyStore: keyStore,
 	}
 }
 
@@ -146,10 +146,15 @@ func (sw *streamWriter) encrypt(in io.Reader) (int, error) {
 	return sum, err
 }
 
+// Encrypt encrypts data from in io.Reader to out io.Writer using AES-256 encryption
+// with CTR stream. It uses buffer with size = BUFFER_SIZE to encrypt data.
+// It calls hash.Write on an HMAC sha-515 for each buffer of encrypted data, and appends
+// the result hash.Sum to the end of encrypted data. First byte of encrypted data
+// uses for versioning, next 16 for store iv.
 func (v *vaultCryptor) Encrypt(in io.Reader, out io.Writer, userID string) (int, error) {
 	var n int
 
-	key, err := v.key.GetKey(userID)
+	key, err := v.keyStore.GetKey(userID)
 	if err != nil {
 		return 0, err
 	}
@@ -180,29 +185,31 @@ func (v *vaultCryptor) Encrypt(in io.Reader, out io.Writer, userID string) (int,
 
 	cw.out = io.MultiWriter(out, h)
 
-	// Write version
+	// Write iv
 	nv, err := cw.out.Write(iv)
 	if err != nil {
-		return n + nv, err
+		return n, err
 	}
 
 	en, err := cw.encrypt(in)
 	if err != nil {
-		return n + en, err
+		return n + nv, err
 	}
 
 	nh, err := cw.out.Write(h.Sum(nil))
 	if err != nil {
-		return n + nh, err
+		return n + nv + en, err
 	}
 
-	return n, nil
+	return n + nv + en + nh, nil
 }
 
+// Decrypt decrypts data, encrypted with Encrypt function, with hash validation for each buffer
+// of encrypted data. For more information see Encryptor descrition.
 func (v *vaultCryptor) Decrypt(in io.Reader, out io.Writer, userID string) (int, error) {
 	var n int
 
-	key, err := v.key.GetKey(userID)
+	key, err := v.keyStore.GetKey(userID)
 	if err != nil {
 		return 0, err
 	}
@@ -220,7 +227,7 @@ func (v *vaultCryptor) Decrypt(in io.Reader, out io.Writer, userID string) (int,
 	}
 
 	iv := make([]byte, IV_SIZE)
-	_, err = io.ReadFull(in, iv)
+	niv, err := io.ReadFull(in, iv)
 	if err != nil {
 		return n, err
 	}
@@ -234,8 +241,8 @@ func (v *vaultCryptor) Decrypt(in io.Reader, out io.Writer, userID string) (int,
 
 	dn, err := cr.decrypt(in, h, iv)
 	if err != nil {
-		return n + dn, err
+		return n + niv, err
 	}
 
-	return n, nil //decrypt(in, out, key, key)
+	return n + dn + niv, nil
 }

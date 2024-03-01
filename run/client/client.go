@@ -9,8 +9,10 @@ import (
 	pb "github.com/Chystik/pass-man/internal/infrastructure/grpc"
 	useradapters "github.com/Chystik/pass-man/internal/user/adapters/client"
 	"github.com/Chystik/pass-man/internal/user/entities"
-	vaultadapters "github.com/Chystik/pass-man/internal/vault/adapters/client"
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	cardAdapters "github.com/Chystik/pass-man/internal/vault/card/adapters/client"
+	fileAdapters "github.com/Chystik/pass-man/internal/vault/file/adapters/client"
+	noteAdapters "github.com/Chystik/pass-man/internal/vault/note/adapters/client"
+	passAdapters "github.com/Chystik/pass-man/internal/vault/password/adapters/client"
 	"github.com/Chystik/pass-man/run/client/cli"
 
 	"google.golang.org/grpc"
@@ -34,9 +36,10 @@ func Client(ctx context.Context, cfg *config.ClientConfig) {
 	}
 	defer conn.Close()
 
+	// User service
 	uc := pb.NewUserServiceClient(conn)
 
-	userAPI := useradapters.NewUserAPIClient(conn, uc)
+	userAPI := useradapters.NewUserAPIClient(uc)
 
 	signCtx, cancelSign := context.WithTimeout(ctx, 10*time.Second)
 	defer cancelSign()
@@ -57,28 +60,32 @@ func Client(ctx context.Context, cfg *config.ClientConfig) {
 		panic("unknown sign type")
 	}
 
+	// vault services
 	pc := pb.NewPasswordServiceClient(conn)
 	cc := pb.NewCardServiceClient(conn)
 	fc := pb.NewFileServiceClient(conn)
+	nc := pb.NewNoteServiceClient(conn)
 
-	passwordAPI := vaultadapters.NewPasswordAPIClient(conn, pc)
-	cardApi := vaultadapters.NewCardAPIClient(conn, cc)
-	fileApi := vaultadapters.NewFileAPIClient(conn, fc)
+	passwordAPI := passAdapters.NewPasswordAPIClient(pc)
+	cardAPI := cardAdapters.NewCardAPIClient(cc)
+	fileAPI := fileAdapters.NewFileAPIClient(fc)
+	noteAPI := noteAdapters.NewNoteAPIClient(nc)
 
 	type vaultAPI struct {
-		usecases.PasswordAPIClient
-		usecases.CardAPIClient
-		usecases.FileAPIClient
+		passAdapters.PasswordAPIClient
+		cardAdapters.CardAPIClient
+		fileAdapters.FileAPIClient
+		noteAdapters.NoteAPIClient
 	}
 
 	va := vaultAPI{
 		passwordAPI,
-		cardApi,
-		fileApi,
+		cardAPI,
+		fileAPI,
+		noteAPI,
 	}
 
 	// Add auth token to all future requests
-	//md := metadata.New(map[string]string{"token": string(c.authToken)})
 	ctxAuth := metadata.AppendToOutgoingContext(ctx, "token", string(c.authToken))
 
 	cli := cli.NewCli(va)

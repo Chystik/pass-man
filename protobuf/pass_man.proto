@@ -186,3 +186,48 @@ message File {
     string meta = 2;
     string full_name = 3;
 }
+
+service NoteService {
+    rpc AddNote(AddNoteRequest) returns (AddNoteResponse) {};
+    rpc GetNote(GetNoteRequest) returns (GetNoteResponse) {};
+    rpc ListNote(ListNoteRequest) returns (ListNoteResponse) {};
+    rpc DeleteNote(DeleteNoteRequest) returns (DeleteNoteResponse) {};
+}
+
+message AddNoteRequest {
+    Note note = 1;
+}
+
+message AddNoteResponse {
+    Error error = 1;
+}
+
+message GetNoteRequest {
+    string meta = 1;
+}
+
+message GetNoteResponse {
+    Note note = 1;
+    Error error = 2;
+}
+
+message ListNoteRequest {
+}
+
+message ListNoteResponse {
+    repeated Note noteList = 1;
+    Error error = 2;
+}
+
+message DeleteNoteRequest {
+    string meta = 1;
+}
+
+message DeleteNoteResponse {
+    Error error = 1;
+}
+
+message Note {
+    string meta = 1;
+    string note = 2;
+}

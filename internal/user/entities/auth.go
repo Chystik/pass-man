@@ -12,7 +12,6 @@ type (
 )
 
 const (
-	//CookieName                = "token"
 	ClaimsKeyName   ClaimsKey = "props"
 	TokenExpiration           = 24 * time.Hour
 )

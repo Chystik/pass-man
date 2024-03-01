@@ -7,14 +7,24 @@ import (
 	"os"
 	"time"
 
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	card "github.com/Chystik/pass-man/internal/vault/card/adapters/client"
+	file "github.com/Chystik/pass-man/internal/vault/file/adapters/client"
+	note "github.com/Chystik/pass-man/internal/vault/note/adapters/client"
+	pass "github.com/Chystik/pass-man/internal/vault/password/adapters/client"
 )
 
-type cli struct {
-	api usecases.VaultAPICliet
+type VaultAPICliet interface {
+	pass.PasswordAPIClient
+	card.CardAPIClient
+	file.FileAPIClient
+	note.NoteAPIClient
 }
 
-func NewCli(api usecases.VaultAPICliet) *cli {
+type cli struct {
+	api VaultAPICliet
+}
+
+func NewCli(api VaultAPICliet) *cli {
 	return &cli{
 		api: api,
 	}
@@ -48,6 +58,8 @@ func (c *cli) Main(ctx context.Context) {
 			cleanScr()
 			c.card(ctx, r)
 		case '3':
+			cleanScr()
+			c.note(ctx, r)
 		case '4':
 			cleanScr()
 			c.file(ctx, r)

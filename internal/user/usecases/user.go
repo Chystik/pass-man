@@ -4,15 +4,20 @@ import (
 	"context"
 
 	"github.com/Chystik/pass-man/internal/user/entities"
-	"github.com/Chystik/pass-man/internal/vault/usecases"
+	"github.com/Chystik/pass-man/internal/vault"
 )
+
+type UserUsecases interface {
+	CreateUser(ctx context.Context, login string, password []byte) error
+	AuthenticateUser(ctx context.Context, login string, password []byte) error
+}
 
 type userUsecases struct {
 	repo  UserRepository
-	vault usecases.VaultKeyStore
+	vault vault.VaultKeyStore
 }
 
-func NewUserUsecases(ur UserRepository, ks usecases.VaultKeyStore) *userUsecases {
+func NewUserUsecases(ur UserRepository, ks vault.VaultKeyStore) *userUsecases {
 	return &userUsecases{
 		repo:  ur,
 		vault: ks,
@@ -51,14 +56,6 @@ func (u *userUsecases) AuthenticateUser(ctx context.Context, login string, passw
 	}
 
 	return u.unlockUserVault(actual, password)
-}
-
-func (u *userUsecases) Update(ctx context.Context, user entities.User) error {
-	panic("not implemented") // TODO: Implement
-}
-
-func (u *userUsecases) Delete(ctx context.Context, user entities.User) error {
-	panic("not implemented") // TODO: Implement
 }
 
 func (u *userUsecases) unlockUserVault(user entities.User, password []byte) error {

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Chystik/pass-man/internal/vault/entities"
+	"github.com/Chystik/pass-man/internal/vault/file/entities"
 )
 
 func (c *cli) file(ctx context.Context, r *bufio.Reader) {
