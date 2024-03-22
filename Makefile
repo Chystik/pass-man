@@ -42,14 +42,18 @@ proto:
     ./protobuf/pass_man.proto
 
 buildVersion = 1.0.0
-buildDate = $(shell date +'%Y/%m/%d %H:%M:%S')
+buildDate = $(shell date +'%d.%m.%Y %H:%M:%S %Z')
 buildCommit = $(shell git rev-parse HEAD)
+
+pkg = main
+FLAG = '-X $(pkg).buildVersion=$(buildVersion) -X "$(pkg).buildDate=$(buildDate)" -X $(pkg).buildCommit=$(buildCommit)'
+
 .PHONY: build
 build:
-	GOOS=windows GOARCH=amd64 go build -buildvcs=false -ldflags="-X main.buildVersion=1.0.0 -X main.buildDate=14.02.2024 -X main.buildCommit=assd" -o=bin/client-windows-amd64.exe ./cmd/client/
-	GOOS=linux GOARCH=amd64 go build -buildvcs=false -ldflags="-X main.buildVersion=1.0.0 -X main.buildDate=14.02.2024 -X main.buildCommit=assd" -o=bin/client-linux-amd64 ./cmd/client/
-	GOOS=darwin GOARCH=amd64 go build -buildvcs=false -ldflags="-X main.buildVersion=1.0.0 -X main.buildDate=14.02.2024 -X main.buildCommit=assd" -o=bin/client-darwin-amd64 ./cmd/client/
-	GOOS=darwin GOARCH=arm64 go build -buildvcs=false -ldflags="-X main.buildVersion=1.0.0 -X main.buildDate=14.02.2024 -X main.buildCommit=assd" -o=bin/client-darwin-arm64 ./cmd/client/
+	GOOS=windows GOARCH=amd64 go build -buildvcs=false -ldflags=$(FLAG) -o=bin/client-windows-amd64.exe ./cmd/client/
+	GOOS=linux GOARCH=amd64 go build -buildvcs=false -ldflags=$(FLAG) -o=bin/client-linux-amd64 ./cmd/client/
+	GOOS=darwin GOARCH=amd64 go build -buildvcs=false -ldflags=$(FLAG) -o=bin/client-darwin-amd64 ./cmd/client/
+	GOOS=darwin GOARCH=arm64 go build -buildvcs=false -ldflags=$(FLAG) -o=bin/client-darwin-arm64 ./cmd/client/
 	GOOS=windows GOARCH=amd64 go build -buildvcs=false -o=bin/server-windows-amd64.exe ./cmd/server/
 	GOOS=linux GOARCH=amd64 go build -buildvcs=false -o=bin/server-linux-amd64 ./cmd/server/
 	GOOS=darwin GOARCH=amd64 go build -buildvcs=false -o=bin/server-darwin-amd64 ./cmd/server/
